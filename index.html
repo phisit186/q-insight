@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="th">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -8,78 +8,114 @@
     <meta name="theme-color" content="#0f172a">
     <style>
         :root {
-            --bg-color: #0f172a;
-            --card-bg: rgba(30, 41, 59, 0.7);
+            --bg: #0f172a;
+            --card: rgba(30, 41, 59, 0.7);
             --primary: #38bdf8;
-            --text-main: #f8fafc;
-            --text-muted: #94a3b8;
+            --accent: #818cf8;
+            --text: #f8fafc;
+            --text-dim: #94a3b8;
         }
-        body { margin: 0; background-color: var(--bg-color); color: var(--text-main); font-family: 'Segoe UI', system-ui, sans-serif; display: flex; justify-content: center; min-height: 100vh; padding: 20px; box-sizing: border-box; }
-        .app-container { background: var(--card-bg); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 30px; width: 100%; max-width: 420px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5); display: flex; flex-direction: column; }
-        .header { text-align: center; margin-bottom: 30px; }
-        .header h1 { margin: 0; font-size: 1.8rem; color: var(--primary); font-weight: 600; letter-spacing: 0.5px; }
-        .header p { margin: 5px 0 0; color: var(--text-muted); font-size: 0.9rem; }
-        .state-box { background: rgba(0,0,0,0.3); padding: 15px; border-radius: 12px; text-align: center; font-family: monospace; font-size: 1.3rem; margin-bottom: 25px; border: 1px solid rgba(56, 189, 248, 0.2); }
-        .controls { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 30px; }
-        .btn { background: #1e293b; color: var(--text-main); border: 1px solid rgba(255,255,255,0.1); padding: 12px; border-radius: 10px; font-size: 1rem; font-weight: 500; cursor: pointer; transition: all 0.2s ease; }
-        .btn:hover { background: var(--primary); color: #0f172a; border-color: var(--primary); transform: translateY(-2px); }
-        .btn-reset { grid-column: span 2; background: transparent; border: 1px dashed var(--text-muted); color: var(--text-muted); }
-        .btn-reset:hover { background: #ef4444; color: white; border-color: #ef4444; }
-        .chart { display: flex; justify-content: space-around; align-items: flex-end; height: 160px; padding-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.1); }
-        .bar-group { display: flex; flex-direction: column; align-items: center; width: 45%; }
-        .bar-wrapper { width: 100%; height: 100px; background: rgba(0,0,0,0.2); border-radius: 6px; display: flex; align-items: flex-end; overflow: hidden; position: relative; }
-        .bar { width: 100%; background: linear-gradient(to top, #0ea5e9, #38bdf8); border-radius: 6px; transition: height 0.5s cubic-bezier(0.4, 0, 0.2, 1); height: 100%; }
-        .label { margin-top: 12px; font-weight: 600; font-size: 1.1rem; }
-        .prob { color: var(--primary); font-size: 0.9rem; margin-top: 4px; }
-        .footer { margin-top: auto; padding-top: 25px; text-align: center; font-size: 0.8rem; color: var(--text-muted); line-height: 1.6; }
-        .dev-name { color: var(--text-main); font-weight: 600; font-size: 0.9rem; margin-top: 5px; }
-        .org-name { color: var(--primary); font-weight: 500; letter-spacing: 0.5px; }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body { 
+            margin: 0; background: var(--bg); color: var(--text); 
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            display: flex; justify-content: center; align-items: center; min-height: 100vh;
+            padding: 15px; overflow-x: hidden;
+        }
+        .app-card {
+            background: var(--card); backdrop-filter: blur(12px);
+            border: 1px solid rgba(255,255,255,0.1); border-radius: 28px;
+            width: 100%; max-width: 400px; padding: 32px;
+            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.6);
+            display: flex; flex-direction: column; gap: 24px;
+        }
+        /* Logo Section */
+        .brand { text-align: center; }
+        .logo-svg { width: 80px; height: 80px; margin-bottom: 12px; filter: drop-shadow(0 0 8px var(--primary)); }
+        .brand h1 { margin: 0; font-size: 1.6rem; letter-spacing: 1px; color: var(--primary); }
+        .brand p { margin: 4px 0 0; font-size: 0.85rem; color: var(--text-dim); text-transform: uppercase; }
+
+        /* Quantum Display */
+        .display-panel {
+            background: rgba(0,0,0,0.3); border-radius: 18px; padding: 20px;
+            border: 1px solid rgba(56, 189, 248, 0.2); text-align: center;
+        }
+        #state-vec { font-family: 'Courier New', monospace; font-size: 1.25rem; font-weight: bold; color: var(--text); }
+        
+        /* Chart Section */
+        .chart-area { display: flex; justify-content: space-around; align-items: flex-end; height: 140px; margin: 10px 0; }
+        .bar-container { width: 35%; display: flex; flex-direction: column; align-items: center; gap: 8px; }
+        .bar-rail { width: 100%; height: 100px; background: rgba(255,255,255,0.05); border-radius: 10px; overflow: hidden; display: flex; align-items: flex-end; }
+        .bar-fill { width: 100%; background: linear-gradient(180deg, var(--primary), var(--accent)); transition: height 0.6s cubic-bezier(0.34, 1.56, 0.64, 1); }
+        .bar-label { font-weight: 600; font-size: 1rem; }
+        .bar-perc { font-size: 0.8rem; color: var(--primary); }
+
+        /* Control Buttons */
+        .controls { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .btn {
+            border: none; border-radius: 14px; padding: 14px; font-size: 0.95rem; font-weight: 600;
+            cursor: pointer; transition: 0.2s; background: #1e293b; color: white;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+        }
+        .btn:active { transform: scale(0.96); }
+        .btn-primary:hover { background: var(--primary); color: #0f172a; }
+        .btn-reset { grid-column: span 2; background: transparent; border: 1px dashed var(--text-dim); color: var(--text-dim); margin-top: 8px; }
+        .btn-reset:hover { border-color: #ef4444; color: #ef4444; }
+
+        /* Footer Credits */
+        .footer { text-align: center; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px; font-size: 0.75rem; color: var(--text-dim); }
+        .dev-name { color: var(--text); font-weight: 600; font-size: 0.85rem; margin: 4px 0; }
+        .univ { color: var(--primary); font-weight: 700; }
     </style>
 </head>
 <body>
-    <div class="app-container">
-        <div class="header">
-            <h1>Q-Insight</h1>
-            <p>1-Qubit State Simulator</p>
-        </div>
 
-        <div class="state-box" id="stateVector">
-            |ψ⟩ = 1.000|0⟩ + 0.000|1⟩
-        </div>
+<div class="app-card">
+    <div class="brand">
+        <svg class="logo-svg" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="50" cy="50" r="45" stroke="#38BDF8" stroke-width="2" stroke-dasharray="5 5"/>
+            <path d="M50 20 A30 30 0 1 1 50 80 A30 30 0 1 1 50 20 Z" fill="#38BDF8" fill-opacity="0.1"/>
+            <path d="M75 50 C75 63.8 63.8 75 50 75 C36.2 75 25 63.8 25 50 C25 36.2 36.2 25 50 25" stroke="#38BDF8" stroke-width="6" stroke-linecap="round"/>
+            <path d="M50 25 L65 10 M65 10 L65 25 M65 10 L50 10" stroke="#38BDF8" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="50" cy="50" r="8" fill="#818CF8"/>
+        </svg>
+        <h1>Q-Insight</h1>
+        <p>Quantum State Simulator</p>
+    </div>
 
-        <div class="controls">
-            <button class="btn" onclick="applyGate('X')">X Gate (NOT)</button>
-            <button class="btn" onclick="applyGate('H')">H Gate (Had)</button>
-            <button class="btn btn-reset" onclick="resetState()">Reset State</button>
-        </div>
+    <div class="display-panel">
+        <div id="state-vec">|ψ⟩ = 1.00|0⟩ + 0.00|1⟩</div>
+    </div>
 
-        <div class="chart">
-            <div class="bar-group">
-                <div class="bar-wrapper"><div class="bar" id="bar0"></div></div>
-                <div class="label">|0⟩</div>
-                <div class="prob" id="prob0">100.0%</div>
-            </div>
-            <div class="bar-group">
-                <div class="bar-wrapper"><div class="bar" id="bar1" style="height: 0%;"></div></div>
-                <div class="label">|1⟩</div>
-                <div class="prob" id="prob1">0.0%</div>
-            </div>
+    <div class="chart-area">
+        <div class="bar-container">
+            <div class="bar-rail"><div id="bar0" class="bar-fill" style="height: 100%"></div></div>
+            <div class="bar-label">|0⟩</div>
+            <div id="p0" class="bar-perc">100%</div>
         </div>
-
-        <div class="footer">
-            <div>Educational Technology Simulation</div>
-            <div class="dev-name">ผศ.ดร.พิสิษฐ์ สุวรรณแพทย์</div>
-            <div class="org-name">AGRICULTURE SILPAKORN</div>
+        <div class="bar-container">
+            <div class="bar-rail"><div id="bar1" class="bar-fill" style="height: 0%"></div></div>
+            <div class="bar-label">|1⟩</div>
+            <div id="p1" class="bar-perc">0%</div>
         </div>
     </div>
 
-    <script src="app.js"></script>
-    <script>
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('sw.js');
-            });
-        }
-    </script>
+    <div class="controls">
+        <button class="btn btn-primary" onclick="gate('X')">X Gate</button>
+        <button class="btn btn-primary" onclick="gate('H')">H Gate</button>
+        <button class="btn btn-reset" onclick="reset()">Reset Simulation</button>
+    </div>
+
+    <div class="footer">
+        Factual Quantum Education Research
+        <div class="dev-name">ผศ.ดร.พิสิษฐ์ สุวรรณแพทย์</div>
+        <div class="univ">AGRICULTURE SILPAKORN</div>
+    </div>
+</div>
+
+<script src="app.js"></script>
+<script>
+    if('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js');
+</script>
 </body>
 </html>
